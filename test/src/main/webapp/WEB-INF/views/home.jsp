@@ -28,6 +28,7 @@
     Lng: <input type="text" id="lng"><br>
     장소ID: <input type="text" id="placeID">
     <input type="button" id="deleteMarkers" value="마커초기화" onclick="javascript:deleteMarkers()">
+    <a href="boardWrite">글쓰기</a>
 </div>
 <script>
     var markers = [];
@@ -79,6 +80,11 @@
                     position: place.geometry.location,
                     animation: google.maps.Animation.DROP
                 });
+                console.log(place);
+                marker_searched.setPlace({
+                    placeId: place.place_id,
+                    location: place.geometry.location
+                });
                 marker_searched.addListener('click',function(event) {
                     function toggleBounce() {
                         if (marker_searched.getAnimation() !== null) {
@@ -106,6 +112,7 @@
                             window.alert('Geocoder failed due to: ' + status);
                         }
                     });
+                    infowindow.setContent(place.name);
                     infowindow.open(map, marker_searched);
                 });
                 markers.push(marker_searched);
@@ -123,6 +130,7 @@
 
 
     function addMarker(latlng,title,map) {
+        var service =  new google.maps.places.PlacesService(map);
         var geocoder = new google.maps.Geocoder;
         var infowindow = new google.maps.InfoWindow();
         var marker = new google.maps.Marker({
@@ -160,11 +168,19 @@
             geocoder.geocode({'location': latlng}, function(results, status) {
                 console.log(results);
                 if (status === google.maps.GeocoderStatus.OK) {
-                    if (results[1]) {
-                        $('#placeID').val(results[1].place_id);
-                    } else {
-                        window.alert('No results found');
-                    }
+
+                    $('#placeID').val(results[1].place_id);
+                    service.getDetails({
+                        placeId: results[1].place_id
+                    }, function (place, status) {
+                        console.log(status);
+                        if (status === google.maps.places.PlacesServiceStatus.OK) {
+                            infowindow.setContent(place.name);
+                        } else {
+                            console.log('장소이름가져오기실패');
+                        }
+                    })
+
                 } else {
                     window.alert('Geocoder failed due to: ' + status);
                 }
@@ -182,9 +198,6 @@
         });
         markers = [];
     }
-
-
-
 
 </script>
 </body>
