@@ -29,6 +29,10 @@
     장소ID: <input type="text" id="placeID">
     <input type="button" id="deleteMarkers" value="마커초기화" onclick="javascript:deleteMarkers()">
     <a href="boardWrite">글쓰기</a>
+    <%--<jsp:include page="boardWrite.jsp" flush="false">--%>
+        <%--<jsp:param name="lat" value=""></jsp:param>--%>
+        <%--<jsp:param name="lng" value=""></jsp:param>--%>
+    <%--</jsp:include>--%>
 </div>
 <script>
     var markers = [];
@@ -100,7 +104,7 @@
                     var longitude=event.latLng.lng();
                     var latlng = {lat: latitude, lng: longitude};
 
-                    geocoder.geocode({'location': latlng}, function(results, status) {
+                geocoder.geocode({'location': latlng}, function(results, status) {
                         console.log(results);
                         if (status === google.maps.GeocoderStatus.OK) {
                             if (results[1]) {
@@ -164,7 +168,14 @@
             var latitude=event.latLng.lat();
             var longitude=event.latLng.lng();
             var latlng = {lat: latitude, lng: longitude};
-
+            $.ajax({
+                url: 'boardWrite',
+                type: 'GET',
+                data: latlng,
+                success: function (data) {
+                    $('#map_side').html(data);
+                }
+            });
             geocoder.geocode({'location': latlng}, function(results, status) {
                 console.log(results);
                 if (status === google.maps.GeocoderStatus.OK) {

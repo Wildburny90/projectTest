@@ -3,7 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.scmastser.test.dao.BoardDAO">
+<mapper namespace="com.scmastser.test.dao.BoardMapper">
 
+    <!--게시물 저장 테스트-->
+    <insert id="boardSave" parameterType="Board">
+        INSERT INTO CS_BOARD
+        (BOA_ID, BOA_CONTENT, BOA_CREATE_DATE, BOA_LATITUDE, BOA_LONGITUDE,
+        BOA_PHOTO_ORIGINALFILE, BOA_PHOTO_SAVEFILE, BOA_VIDEO_ORIGINALFILE, BOA_VIDEO_SAVEFILE, MEM_ID)
+        VALUES (CS_BOARD_SEQ.nextval,#{boa_content},sysdate,#{boa_latitude},#{boa_longitude},null,null,null,null,#{mem_id})
+    </insert>
 
 </mapper>

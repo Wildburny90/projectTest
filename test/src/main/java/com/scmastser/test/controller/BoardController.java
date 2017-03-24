@@ -1,14 +1,25 @@
 package com.scmastser.test.controller;
 
-import org.springframework.stereotype.Controller;
+import com.scmastser.test.dao.BoardDAO;
+import com.scmastser.test.vo.Board;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class BoardController {
 
-    @RequestMapping(value = "boardWrite", method = RequestMethod.GET)
-    public String boardWrite(){
-        return "boardWrite";
+    @Autowired
+    BoardDAO dao;
+
+    @RequestMapping(value = "boardSave", method = RequestMethod.POST)
+    public String boardSave(String content, Board board){
+        System.out.println(board);
+        board.setBoa_content(content);
+        int result = dao.boardSave(board);
+        System.out.println(result);
+        return "";
     }
+
 }
