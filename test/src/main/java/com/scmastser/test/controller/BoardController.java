@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.annotation.MultipartConfig;
+
+@MultipartConfig
 @RestController
 public class BoardController {
 
@@ -14,12 +17,12 @@ public class BoardController {
     BoardDAO dao;
 
     @RequestMapping(value = "boardSave", method = RequestMethod.POST)
-    public String boardSave(String content, Board board){
+    public int boardSave(Board board){
         System.out.println(board);
-        board.setBoa_content(content);
+        board.setMem_id("123");
         int result = dao.boardSave(board);
         System.out.println(result);
-        return "";
+        return result;
     }
 
 }

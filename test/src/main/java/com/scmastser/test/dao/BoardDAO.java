@@ -1,9 +1,10 @@
 package com.scmastser.test.dao;
 
-import com.scmastser.test.vo.Board;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.scmastser.test.vo.Board;
 
 @Repository
 public class BoardDAO {
