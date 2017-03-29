@@ -4,6 +4,11 @@
 <head>
     <meta charset="utf-8">
     <script>
+        var boa_photo_originalfile = '';
+        var boa_photo_savefile = '';
+        var boa_video_originalfile = '';
+        var boa_video_savefile = '';
+
         function saveContent() {
 
             var boa_content = $('#myEditor').val();
@@ -16,7 +21,11 @@
                 data: {
                     boa_content: boa_content,
                     boa_latitude: boa_latitude,
-                    boa_longitude: boa_longitude
+                    boa_longitude: boa_longitude,
+                    boa_photo_originalfile: boa_photo_originalfile,
+                    boa_photo_savefile: boa_photo_savefile,
+                    boa_video_originalfile: boa_video_originalfile,
+                    boa_video_savefile: boa_video_savefile
                 },
                 success: function (data) {
                     if (data == 1) {
@@ -78,6 +87,11 @@
             toolbarInline: false,
             language: 'ko',
             imageUploadURL: 'upload_image',
+            fileUploadURL: 'upload_file',
+            imageManagerLoadURL: 'load_images',
+            imageManagerDeleteURL: "delete_image",
+            imageManagerDeleteMethod: "POST",
+            videoUploadURL: 'upload_video'
         })
             .on('froalaEditor.image.beforeUpload', function (e, editor, images) {
                 // Return false if you want to stop the image upload.
@@ -85,15 +99,17 @@
             })
             .on('froalaEditor.image.uploaded', function (e, editor, response) {
                 // Image was uploaded to the server.
-                console.log('이미지 업로드 하고 나서');
+                console.log('이미지 업로드됨');
+                var oriStart = response.indexOf('#');
+                var oriEnd = response.indexOf('%');
+                var saveStart = 9;
+                var saveEnd = response.indexOf(',');
+                boa_photo_savefile = response.substring(saveStart,saveEnd-1);
+                boa_photo_originalfile = response.substring(oriStart+1,oriEnd);
             })
             .on('froalaEditor.image.inserted', function (e, editor, $img, response) {
                 // Image was inserted in the editor.
-                console.log('이미지 삽입되고 나면');
-            })
-            .on('froalaEditor.image.replaced', function (e, editor, $img, response) {
-                // Image was replaced in the editor.
-                console.log('이미지가 교체되고 나면');
+                console.log('이미지 삽입됨');
             })
             .on('froalaEditor.image.error', function (e, editor, error, response) {
                 // Bad link.
@@ -132,6 +148,15 @@
                 }
 
                 // Response contains the original server response to the request if available.
+            })
+            .on('froalaEditor.video.inserted', function (e, editor, $video, response) {
+                console.log('비디오 업로드됨');
+                var oriStart = response.indexOf('#');
+                var oriEnd = response.indexOf('%');
+                var saveStart = 9;
+                var saveEnd = response.indexOf(',');
+                boa_video_savefile = response.substring(saveStart,saveEnd-1);
+                boa_video_originalfile = response.substring(oriStart+1,oriEnd);
             });
 
     });

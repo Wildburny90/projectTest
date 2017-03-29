@@ -1,7 +1,7 @@
 package com.scmastser.test.controller;
 
-import com.scmastser.test.util.com.froala.editor.Image;
 import com.google.gson.Gson;
+import com.scmastser.test.util.com.froala.editor.Image;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -13,41 +13,32 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Servlet implementation class UploadImage
- */
 @WebServlet("/upload_image")
 @MultipartConfig
 public class UploadImage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
 	public UploadImage() {
 		super();
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		String fileRoute = "./resources/img/upload/";
+		String fileRoute = "resources\\img\\";
+		String originalFileName = "#" + request.getPart("file").getSubmittedFileName() + "%";
 		Map<Object, Object> responseData;
 		try {
-			responseData = Image.upload(request, fileRoute); // Use default
-																// image
-																// validation.
+			responseData = Image.upload(request, fileRoute);
+			Thread.sleep(5000);
 		} catch (Exception e) {
 			e.printStackTrace();
 			responseData = new HashMap<Object, Object>();
 			responseData.put("error", e.toString());
 		}
-		String jsonResponseData = new Gson().toJson(responseData);
+		responseData.put("originalFilename",originalFileName);
+        String jsonResponseData = new Gson().toJson(responseData);
+
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(jsonResponseData);
